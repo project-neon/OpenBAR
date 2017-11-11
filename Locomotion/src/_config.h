@@ -100,8 +100,6 @@
 //
 #define LARGURA_CAMPO 300
 #define ALTURA_CAMPO  200
-// #define TERRINES_LEFT
-#define TERRINES_RIGHT
 
 //
 //constant

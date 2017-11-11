@@ -40,7 +40,7 @@
  //Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
 
  DigitalIn cow_sensor(cow_sensor_pin);
- bool cow_sensor_state = false;
+ bool cow_sensor_state = true;
 
  float sum = 0;
  uint32_t sumCount = 0;
@@ -308,6 +308,12 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
 
  int main()
  {
+
+   // #define TERRINES_LEFT
+   #define TERRINES_RIGHT
+
+   // #define CALIBRATION
+
    pc.baud(115200);
    pc.printf("\nBAR Connected");
 
@@ -318,7 +324,7 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
 
 
 
-  wait(10);
+  // wait(10);
 
 
   int distanceSetPoint_back = (LARGURA_CAMPO*0.5)/WHEEL_RADIO;   //cm
@@ -365,16 +371,15 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
   // align to cows
   turnLeft(0.7,turnNinetyDegrees, true);
   // go ahead!
-
-
-  while (!cow_sensor_state) {
-    float speed = 0.2;
+  while (cow_sensor_state) {
+    float speed = 0.15;
     m1.speed(speed);
     m2.speed(speed);
     m3.speed(speed);
     m4.speed(speed);
 
     cow_sensor_state = cow_sensor.read();
+    pc.printf("\n Cow_state: %d", cow_sensor_state);
   }
 
   m1.brake();
@@ -384,9 +389,8 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
 
   #endif
 
-  // #define CALIBRATION
-  #ifndef CALIBRATION
-  turnRight(0.7, turnNinetyDegrees, true);
-  #endif
+  // #ifndef CALIBRATION
+  // turnRight(0.7, turnNinetyDegrees, true);
+  // #endif
 
 }
