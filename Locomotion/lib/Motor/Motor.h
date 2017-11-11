@@ -8,10 +8,11 @@ class Motor {
         Motor(PinName pwm, PinName in1, PinName in2);
         void speed(float speed);
         void coast();
-        void brake();     
+        void brake();
+
     protected:
-    mutable PwmOut _pwm;
     mutable DigitalOut _in1;
+    mutable PwmOut _pwm;
     mutable DigitalOut _in2;
 };
 
