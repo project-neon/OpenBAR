@@ -306,13 +306,22 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
    forward(- _speed, setPoint, isBrake);
  }
 
+float cmTodegrees(float _cm){
+
+  float _degrees;
+  _degrees = _cm/WHEEL_RADIO;
+  _degrees = (_degrees*180.0)/MATH_PI;
+  pc.printf("\nCm to degrees: %f ", _degrees);
+  return(_degrees);
+}
+
  int main()
  {
 
    // #define TERRINES_LEFT
-   #define TERRINES_RIGHT
+   // #define TERRINES_RIGHT
 
-   // #define CALIBRATION
+   #define CALIBRATION
 
    pc.baud(115200);
    pc.printf("\nBAR Connected");
@@ -389,8 +398,10 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
 
   #endif
 
-  // #ifndef CALIBRATION
-  // turnRight(0.7, turnNinetyDegrees, true);
-  // #endif
+  #ifdef CALIBRATION
+    // turnRight(0.7, turnNinetyDegrees, true);
+    forward(0.2, cmTodegrees(36));
+
+  #endif
 
 }
