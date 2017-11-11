@@ -27,8 +27,6 @@
 
  #include "mbed.h"
  #include "MPU6050.h"
-// #include "Motor.h"
- //#include "QEI.h"
  #include "_config.h"
  #include "Ultrasonic.h"
  //#include "N5110.h"
@@ -49,20 +47,6 @@
     Timer t;
 
     Serial pc(USBTX, USBRX); // tx, rx
-
-    //        VCC,   SCE,  RST,  D/C,  MOSI,S CLK, LED
-    //N5110 lcd(PA_8, PB_10, PA_9, PA_6, PA_7, PA_5, PC_7);
-    // Motors
-    // Motor m1(PIN_M1_EN, PIN_M1_IN1, PIN_M1_IN2); //trás esquerda
-    // Motor m2(PIN_M2_EN, PIN_M2_IN1, PIN_M2_IN2); //frente esquerda
-    // Motor m3(PIN_M3_EN, PIN_M3_IN1, PIN_M3_IN2); //trás direita
-    // Motor m4(PIN_M4_EN, PIN_M4_IN1, PIN_M4_IN2); //frente direita
-    //
-    // //QEI(PinName channelA, PinName channelB, PinName index, int pulsesPerRev, Encoding encoding = X2_ENCODING);
-    // QEI encA (PIN_ENCA_1, PIN_ENCA_2, NC, COUNTS_PER_REV);
-    // QEI encB (PIN_ENCB_1, PIN_ENCB_2, NC, COUNTS_PER_REV);
-    // QEI encC (PIN_ENCC_1, PIN_ENCC_2, NC, COUNTS_PER_REV);
-    // QEI encD (PIN_ENCD_1, PIN_ENCD_2, NC, COUNTS_PER_REV);
 
     // ultrasonic(PinName trigPin, PinName echoPin, float updateSpeed, float timeout);
     ultrasonic us1 (PIN_US_S1_TRIG, PIN_US_S1_ECHO, .1,3);
@@ -304,19 +288,21 @@ void turnLeft(float _speed, float setPoint, bool isBrake=true){
 void turnRight(float _speed, float setPoint, bool isBrake=true){
     turnLeft(-_speed, setPoint, isBrake);
 }
-typedef enum sentido {
-    horario,
-    antihorario
-} sentido;
 
-void turn(sentido _sentido, float _speed, float setPoint, bool isBrake=true){
-(_sentido == horario)? _speed = -_speed:_speed = _speed;
-turnLeft(_speed, setPoint, isBrake);
-}
+// typedef enum sentido {
+//     horario,
+//     antihorario
+// } sentido;
+//
+// void turn(sentido _sentido, float _speed, float setPoint, bool isBrake=true){
+// (_sentido == horario)? _speed = -_speed:_speed = _speed;
+// turnLeft(_speed, setPoint, isBrake);
+// }
 
-void backward(float _speed, int setPoint, bool isBrake=true){
-  forward(- _speed, setPoint, isBrake);
-}
+ void backward(float _speed, int setPoint, bool isBrake=true){
+   forward(- _speed, setPoint, isBrake);
+ }
+
  int main()
  {
    pc.baud(115200);
@@ -337,22 +323,19 @@ void backward(float _speed, int setPoint, bool isBrake=true){
   int degreesSetPoint_back = (distanceSetPoint_back*180)/MATH_PI;
   int turnNinetyDegrees = 1.43*360;
 
-  // pc.printf("\nDist back: %d", degreesSetPoint_back);
-  // pc.printf("\nDist forward: %d", degreesSetPoint_forward);
-
   #ifdef TERRINES_LEFT
   backward(0.5, degreesSetPoint_back, false);
-  forward(0.3, 150);
+  forward(0.3, 100);
   turnLeft(0.7, turnNinetyDegrees, true);
   forward(0.3, degreesSetPoint_forward, false);
   forward(0.5, 200,false);
   //go back with terrines
-  backward(0.1, 180, false);
+  backward(0.3, degreesSetPoint_forward, true);
+  turnLeft(0.2, 180);
   //go to cows
   turnRight(0.7, turnNinetyDegrees);
   backward(0.5, 500);
-  forward(0.3,degreesSetPoint_forward);
-
+  forward(0.3,degreesSetPoint_back);
   #endif
 
   #ifdef TERRINES_RIGHT
@@ -370,41 +353,7 @@ void backward(float _speed, int setPoint, bool isBrake=true){
   forward(0.3,degreesSetPoint_back);
   #endif
 
-  // turnRight(0.7, turnNinetyDegrees, true);
-
-   // m1.speed(-1);
-   //m2.speed(0.5);
-   //m4.speed(0.3);
-   //m3.speed(0.5);
-   // pc.printf("\n --- Motor M1" );
-   // bool m1_finish = waitDegrees(encA,m1);
-   // pc.printf("\n --- Motor M2" );
-   // bool m2_finish = waitDegrees(encB,m2);
-   // pc.printf("\n --- Motor M3" );
-   // bool m3_finish = waitDegrees(encC,m3);
-   // pc.printf("\n --- Motor M4");
-  //bool m4_finish = waitDegrees(encD,m4);
-
-  //   m1.brake();
-   //pc.printf("\n Final M1 degrees: %d", degrees_m1);
-
-
-
-//
-//us1.startUpdates();
-//us2.startUpdates();
-//
-//  while (1) {
-//    us1.checkDistance();
-//    us2.checkDistance();
-//    /* code */
-//
-//    us1_value = us1.getCurrentDistance();
-//    us2_value = us2.getCurrentDistance();
-//
-//    wait(2);
-//
-//    pc.printf("\n us1_value: %f",us1_value );
-//    pc.printf("\n us2_value: %f",us2_value );
-//  }
+  #ifndef CALIBRATION
+  turnRight(0.7, turnNinetyDegrees, true);
+  #endif
 }
