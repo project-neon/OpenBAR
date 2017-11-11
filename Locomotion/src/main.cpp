@@ -39,6 +39,9 @@
  // pin 6 - LCD reset (RST)
  //Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
 
+ DigitalIn cow_sensor(cow_sensor_pin);
+ bool cow_sensor_state = false;
+
  float sum = 0;
  uint32_t sumCount = 0;
 
@@ -316,6 +319,8 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
 
 
   wait(10);
+
+
   int distanceSetPoint_back = (LARGURA_CAMPO*0.5)/WHEEL_RADIO;   //cm
   int distanceSetPoint_forward = (ALTURA_CAMPO*0.5)/WHEEL_RADIO; //cm
 
@@ -323,34 +328,60 @@ void turnRight(float _speed, float setPoint, bool isBrake=true){
   int degreesSetPoint_back = (distanceSetPoint_back*180)/MATH_PI;
   int turnNinetyDegrees = 1.43*360;
 
-  #ifdef TERRINES_LEFT
-  backward(0.5, degreesSetPoint_back, false);
-  forward(0.3, 100);
-  turnLeft(0.7, turnNinetyDegrees, true);
-  forward(0.3, degreesSetPoint_forward, false);
-  forward(0.5, 200,false);
-  //go back with terrines
-  backward(0.3, degreesSetPoint_forward, true);
-  turnLeft(0.2, 180);
-  //go to cows
-  turnRight(0.7, turnNinetyDegrees);
-  backward(0.5, 500);
-  forward(0.3,degreesSetPoint_back);
-  #endif
+  // #ifdef TERRINES_LEFT
+  // backward(0.5, degreesSetPoint_back, false);
+  // forward(0.3, 100);
+  // turnLeft(0.7, turnNinetyDegrees, true);
+  // forward(0.3, degreesSetPoint_forward, false);
+  // forward(0.5, 200,false);
+  // //go back with terrines
+  // backward(0.3, degreesSetPoint_forward, true);
+  // turnLeft(0.2, 180);
+  // //go to cows
+  // turnRight(0.7, turnNinetyDegrees);
+  // backward(0.5, 500);
+  // forward(0.3,degreesSetPoint_back);
+  // #endif
 
   #ifdef TERRINES_RIGHT
+  // go back and align on wall
   backward(0.5, degreesSetPoint_back, false);
+  // take a distance from wall
   forward(0.3, 100);
+  // align the robot to the terrines
   turnRight(0.7, turnNinetyDegrees, true);
+  // go ahead to and take the terrines
   forward(0.3, degreesSetPoint_forward, false);
+  // a little bit more...
   forward(0.5, 200,false);
   //go back with terrines
-  backward(0.3, degreesSetPoint_forward, true);
   turnRight(0.2, 180);
-  //go to cows
+  backward(0.3, degreesSetPoint_forward, true);
+  // align to middle
   turnLeft(0.7, turnNinetyDegrees);
   backward(0.5, 500);
+  //go to cows
   forward(0.3,degreesSetPoint_back);
+  // align to cows
+  turnLeft(0.7,turnNinetyDegrees, true);
+  // go ahead!
+
+
+  while (!cow_sensor_state) {
+    float speed = 0.2;
+    m1.speed(speed);
+    m2.speed(speed);
+    m3.speed(speed);
+    m4.speed(speed);
+
+    cow_sensor_state = cow_sensor.read();
+  }
+
+  m1.brake();
+  m2.brake();
+  m3.brake();
+  m4.brake();
+
   #endif
 
   // #define CALIBRATION

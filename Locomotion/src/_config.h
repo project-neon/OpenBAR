@@ -18,13 +18,6 @@
 #define PC_SPEED	115200
 
 //
-// Bluetooth Configs (Type here)
-//
-#define BT_SPEED	9600
-#define BTRX	p9
-#define BTTX	p10
-
-//
 // Settings
 //
 #define WHITE_LINE	1
@@ -84,6 +77,11 @@
 #define PIN_US_S3_TRIG p25
 #define PIN_US_S4_ECHO p24
 #define PIN_US_S4_TRIG p23
+
+//
+// Cow sensor
+//
+#define cow_sensor_pin p9
 
 // Encoder config (Quadrature)
 //
