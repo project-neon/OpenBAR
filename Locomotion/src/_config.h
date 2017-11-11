@@ -17,7 +17,6 @@
 #define LOG	PC
 #define PC_SPEED	115200
 
-
 //
 // Bluetooth Configs (Type here)
 //
@@ -122,6 +121,5 @@ QEI encA (PIN_ENCA_1, PIN_ENCA_2, NC, COUNTS_PER_REV);
 QEI encB (PIN_ENCB_1, PIN_ENCB_2, NC, COUNTS_PER_REV);
 QEI encC (PIN_ENCC_1, PIN_ENCC_2, NC, COUNTS_PER_REV);
 QEI encD (PIN_ENCD_1, PIN_ENCD_2, NC, COUNTS_PER_REV);
-
 
 #endif
